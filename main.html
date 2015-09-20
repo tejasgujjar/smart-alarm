@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>SA</title>
+		
+		<link href="css/jquery.mobile-1.4.4.css" rel="stylesheet" type="text/css" media="screen"/>
+		<link href="css/styles.css" rel="stylesheet" type="text/css" media="screen"/>
+		
+		
+		<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
+		<script type="text/javascript" src="js/jquery-1.11.1.js"></script>
+		<script type="text/javascript" src="js/jquery.mobile-1.4.4.js"></script>
+		<script type="text/javascript" src="js/jquery.blockUI_2.66.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript" src="js/mapWidget.js"></script>
+		<script type="text/javascript" src="js/createGeofence.js"></script>
+		<script type="text/javascript" src="js/geofenceMap.js"></script>
+		
+		
+		<!-- <script type="text/javascript" src="cordova.js"></script> -->
+		
+		<!-- <script type="text/javascript" src="js/bgServicesScript.js"></script> -->
+		
+		
+	</head>
+<body class="graybg">
+	<div id="createGeofencePage" class=" wth100">
+					<div id="create_geofence_screen">
+						<div id="create_geofence_name" class="selected-list-name">
+								<div class="left-arrow"></div>
+								<div id="create_geofence_name_text" class="geofence-name alertsName drivezone-name">Set Location</div>	
+								<div  class="on_off_toggle">
+									<select id="createGeofence_select" name="on_off_toggle" data-role="slider">
+										<option value="off">Off</option>
+										<option value="on">On</option>
+									</select> 
+								</div>
+						</div>
+						<!-- <div  id="create_geo_name" class="paddingTopBottom7 wth100 graybottomBr disp-table">
+							<div class="disp-tablecell paddingLtRt wth20" id="create_geo_name_txt">Name</div>
+							<div id="create_geo_name_div" class="greyClrTxt paddingLtRt">
+								<input type="text" id="create_geo_name_val" />
+							</div>
+						</div> -->
+						<div  id="new_center" class="paddingTopBottom7 wth100 graybottomBr disp-table">
+							<div class="disp-tablecell paddingLtRt wth20" id="center_text">Address</div>
+							<div id="address" class="greyClrTxt paddingLtRt">
+								<!-- Manayata Tech Park, Nagavara, Bengaluru, Karnataka, India -->
+								<input type="text" id="inputAddressBar" onfocus="initialize()" />
+							</div>
+						</div>
+						<div class="center">
+							<button id="viewmap_button"><img src ="images/map3.png" width="16px" height="16px">&nbsp; View Map</button>
+						</div>
+						<div class="graybottomBr"></div>
+					
+						 <div id="create_radius" class="paddingTopBottom wth100 graybottomBr disp-table">
+							<div class="disp-tablecell paddingLtRt wth20" id="radius_text">Radius</div>
+							<div class="greyClrTxt paddingLtRt"><span id="geofence_radius"></span><span style="padding-left:3px;" id="rad_unit">Km</span></div>
+						</div>
+					
+					</div>
+					<div id="viewMap_screen" class="display_none"> 
+						<div class="wth100 mapHeight" id="map-canvas"></div>
+						<div id="buttonsDiv">
+							<div id="new_radius" class="disp-table wth100">
+								<div id="radius_text" class="disp-tablecell">Radius</div>
+								<div style="width:80px;" class="disp-tablecell"><input type="number" maxlength = "4" max = "10" id="radius_map_new"  value=""></div>
+								
+								<div class="disp-tablecell" id="km_val">&nbsp;    Km</div>
+								
+							</div>
+							<div>
+								<input  type="button" data-role="none" id="map_submit" class="demo-button" value="Submit">
+								<input  type="button" data-role="none" id="map_back" class="floatRt demo-button" value="Back">
+							</div>												
+						</div>
+					</div>
+				</div>
+			<!-- 	http://stackoverflow.com/questions/17190654/how-to-create-text-file-in-given-directory-in-iphone-and-android -->
+</body>
+</html>
