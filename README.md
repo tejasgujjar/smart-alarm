@@ -11,4 +11,4 @@ As soon as you open application, on Home page you have to set the destination lo
 Once you set the destination location and radius of the fence you just have to click on the toggle button on top right corner to turn on the tracker. Upon turning on, the algorithm will calculate the remaining distance to your destination & updates device's network connection status.
 
 Upon turning on the tracker, application will smartly keep a track on your device's current location and notifies you once you are close enough to the destination. This application runs in background even if you have minimized the application.
-Here is the link for the post https://www.linkedin.com/pulse/ever-m...
+Here is the link for the post https://www.linkedin.com/pulse/ever-missed-stop-public-transport-while-commuting-tejas-gujjar?forceNoSplash=true
