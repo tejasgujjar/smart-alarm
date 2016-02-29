@@ -1,249 +1,286 @@
-//tejas 18th sep
-$(document).ready(function(){
+$(document).ready(function()
+{
+	alert("testttttttt");
+	allevents();
+	document.addEventListener("deviceready", onDeviceReady, true);
+	// document.addEventListener('deviceready', function() {
+			// alert("device ready	");
+				// myService = cordova.plugins.myService;
+				// getStatus();
+  			// }, true);
+	loadMap(1);
+});
+var isDeviceReady = false;
+var myMedia;
+var writeText;
+var txtAlert;
+function allevents()
+{
+	 // Retrieve
+    var check = $('#updateStatus').text();//initial text in html is blank 
+    if(check == "")
+    {
+    	 localStorage.setItem("bgServiceStatus", "notrunning");
+    }
+    txtAlert = localStorage.getItem("bgServiceStatus");
+    if(txtAlert != null)
+    {
+    	if(txtAlert == "running")
+    		{
+    		$("#createGeofence_select").val('on').slider('refresh');
+    		$('#currentStatus').text("Approximately 3 hours (88 KM) away from the destination.");
+    		document.getElementById("viewmap_button").disabled = true;
+			document.getElementById("offAlarm").disabled = false;
+    		}
+    	else
+    		{
+	    		$("#createGeofence_select").val('off').slider('refresh');
+	    		$('#updateStatus').text("No details available. Please activate alarm.");
+	    		$('#currentStatus').text("Alarm deactivated.");
+	    		document.getElementById("viewmap_button").disabled = false;
+				document.getElementById("offAlarm").disabled = true;
+    		}
+    }
+    else
+    {
+    	$("#createGeofence_select").val('off').slider('refresh');
+    	$('#updateStatus').text("No details available. Please activate alarm.");
+		$('#currentStatus').text("Alarm deactivated.");
+		document.getElementById("viewmap_button").disabled = false;
+		document.getElementById("offAlarm").disabled = true;
+    }
+	$('#viewmap_button').unbind();
+	$('#viewmap_button').bind('click',function(){
+		$('#create_geofence_screen').hide();
+		loadMap(globalRadius);
+		$('#viewMap_screen').show();
+		$('#back').hide();
+	});
 	
-	$.mobile.loading( "show", {theme: "d"});
-	 setTimeout(function(){
-    	 $.mobile.loading( "hide" );
-    }, 3);
-	var jsonData = memberDetailData; 
-    parsedData = $.parseJSON(jsonData);
-    memObj = parsedData.metadata[0].member;
-    setTimeout(function(){
-    	populateMemberList(parsedData);
-    }, 5); //remove setTimeout later
-    
-	$('#addExp_submit').unbind('click',function(){});
-	$('#addExp_submit').bind('click',function(){
-		addExpense();
+	$('#map_submit').unbind();
+	$('#map_submit').bind('click',function(){
+		clickedonMap(globalMarkerLocation,true);
+		$('#create_geofence_screen').show();
+		$('#viewMap_screen').hide();
+		isEnteredAddress = false;
+		saveMapData();		
 	});
-	$('#addExp_cancel').unbind('click',function(){});
-	$('#addExp_cancel').bind('click',function(){
-		$("#addExpense_popupDialog").popup("close");
-		$('#amtInv').val("");
-		$('#amtLoc').val("");
-		$('#amtPurpose').val("");
+	$('#map_back').bind('click',function(){
+		$('#create_geofence_screen').show();
+		$('#viewMap_screen').hide();
+		isEnteredAddress = false;
+		restoreMapData();
 	});
-	$('#addMemSubmit').unbind('click',function(){});
-	$('#addMemSubmit').bind('click',function(){
-		$("#addMem_popupDialog").popup("close");
-		acceptNewMember();
+	$('#radius_map_new').keyup(function(){
+		enteredRadiusVal();
 	});
 	
-	$('#addExpense_popupDialog_Btn').click(function(){
-		$('#memListDropdown').html("");
-		var i;
-		memObj = parsedData.metadata[0].member;
-		var len= memObj.length;
-		for(i=0;i<=len-1;i++)
+	    $('#offAlarm').unbind();
+	    $('#offAlarm').bind('click',function(){
+	    	offAlarm();
+	    });
+	 /*   $('#create').unbind();
+	    $('#create').bind('click',function(){
+	    	if(isDeviceReady)
+	    		{
+	    		//writeFile("Hello Again");
+	    		}else{alert("Device not ready");}
+	    });*/
+	
+	$(document).on('slidestop', '#createGeofence_select', function(){
+		var togg = document.getElementById("createGeofence_select").value;
+		if(togg=="on")
 		{
-			$('#memListDropdown').append($('<option>', {
-				   value: memObj[i].name,
-				   text: memObj[i].name
-				}));
+			var val = $('#inputAddressBar').val();
+			if(globalMarkerLocation == null || val == "" )
+				{
+				$("#createGeofence_select").val('off').slider('refresh');
+					alert("Please select address");
+				}
+			else
+				{
+					if (typeof(Storage) != "undefined") {
+					    // Store
+					    localStorage.setItem("bgServiceStatus", "running");
+					   
+					} else {
+						alert("Sorry, your browser does not support Web Storage...");
+					}
+					if(isDeviceReady)
+						startBgService();
+					document.getElementById("viewmap_button").disabled = true;
+					document.getElementById("offAlarm").disabled = false;
+				}
+		}
+		else if(togg == "off")
+		{
+			offAlarm();
+			/*document.getElementById("viewmap_button").disabled = false;
+			document.getElementById("offAlarm").disabled = true;
+			//off function
+			stopAudio();
+			  localStorage.setItem("bgServiceStatus", "notrunning");
+			$('#updateStatus').text("No details available. Please activate alarm.");
+    		$('#currentStatus').text("Alarm deactivated.");
+    		stopBgService();*/
 		}
 	});
-});
-var parsedData;
-var memObj;
+}
 
-$( document ).on( "click", ".show-page-loading-msg", function() {
-    $.mobile.loading( "show", {theme: "d"});
-    setTimeout(function(){
-    	 $.mobile.loading( "hide" );
-    }, 3000);
-});
+function onDeviceReady() {
+	alert("not ready");
+	isDeviceReady = true;
+	//writeFile("Hello");
+     myMedia = new Media('sound.mp3', stopAudio);
+	 //alert("device ready. Welcome");
+	myService = cordova.plugins.myService;
+	checkConnection();
+	trackCurrentLocation();
+}
 
-function addExpense()
+function trackCurrentLocation()
 {
-	var amt = $('#amtInv').val();
-	var loc = $('#amtLoc').val();
-	var purpose = $('#amtPurpose').val();
-	var selected_option = $('#memListDropdown').find(":selected").text();
-	var valid = true;
-	var numbers = /^[0-9]+$/;  
-  /*  if(amt.match(numbers))  
-    	valid = true;
-    else
-    	valid = false;*/
-    if(loc == "" || purpose == "" || !(amt.match(numbers)))
-    	valid = false;
-    else
-    	valid = true;
-    
-    if(valid)
-    {
-    	//alert("OK");
-    	$( "#addExp_cancel" ).trigger( "click" );
-    	acceptExpense(selected_option,amt,purpose,loc);
+	navigator.geolocation.getCurrentPosition(onSuccess, onError);
+}
+
+function gotFS(fileSystem) {
+        fileSystem.root.getFile("test.txt", {create: true}, gotFileEntry, fail);
     }
-    else
-    {
-    	alert("NOT ok");
-    /*	showPopup(
-                {
-                    headText: "Error",
-                    innerText: "Proper",
-                    button1: "ok"
-                });*/	
+
+    function gotFileEntry(fileEntry) {
+        fileEntry.createWriter(gotFileWriter, fail);
     }
-    $('#amtInv').val("");
-	$('#amtLoc').val("");
-	$('#amtPurpose').val("");
-}
 
-function acceptExpense(name,amt,purpose,loc)
-{
-	//alert("Name: "+name+" amount: "+amt+" purpose: "+purpose+" loc: "+loc);
-	var dt = new Date();
-	var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
-	var d = new Date();
-	var month = d.getMonth()+1;
-	var day = d.getDate();
-	var output= (day<10 ? '0' : '') + day + '-'+ (month<10 ? '0' : '') + month + '-' + d.getFullYear();
-	alert("Name: "+name+" amount: "+amt+" purpose: "+purpose+" loc: "+loc+" "+output+" "+time);
-	memObj = parsedData.metadata[0].member;
-	var index = getIndex(name,parsedData);
-	var expObj = memObj[index]['entry'];
-	expObj.push({"id":"ent_5","purpose":purpose,"location":loc,"time":time,"amount":amt,"date":output});
-	memberDetailData = JSON.stringify(parsedData);
-}
+    function gotFileWriter(writer) {
+        writer.onwrite = function(evt) {
+            console.log("write success");
+        };
+        writer.write(writeText)
+    }
 
-function acceptNewMember()
-{
-	var mobNumber = $('#memMobNumber').val();
-	var memName = $('#memName').val();
-	if(checkPreviousName(memName)){
-		
-	}
-	else{
-		alert("Name already exists");
-		return;
-	}
-	if(memName == "" || memName == " "){
-		alert("Please enter name");
-		return ;
-	}
-	else{
-		var member = parsedData.metadata[0]['member'];
-		member.push({"id":"mem_7","name":memName,"amount":"00"});
-		memberDetailData = JSON.stringify(parsedData);
-		$('#memMobNumber').val('');
-		$('#memName').val('');
-		populateMemberList(parsedData);
-		
-	}
-}
+    function fail(error) {
+        if(error.code == 1){
+            alert('not found');
+        }
+        alert(error.code);
+    }
 
-function populateMemberList(parsedData) //IMP
-{
-	memObj = parsedData.metadata[0].member;
-	var memLength = memObj.length;
-	var items = [];
-	var i;
-	$('#member_list').html("");
-	var serialNum =0; 
-	if(memLength != 0)
-	{
-		for(i =0;i<=memLength-1;i++)
-			{
-				$('#member_list').html("");
-				serialNum = i+1;
-				var toPush = '<li class="list" id="'+memObj[i].name+'"><span class="serialNo">'+serialNum+'.</span><span class="memName">'+memObj[i].name+'</span><span class="amt"><img alt="Rs" src="img/rupee.png" width="7" height="10" style="vertical-align: baseline" data-file-width="512" data-file-height="754">'+memObj[i].amount+'</span></li>';
-				items.push(toPush);
-				$('<ul/>', {
-				    html: items.join('')
-				  }).appendTo('#member_list');
-			}
-	}
-	else
-	{
-      alert("No members currently.");
-	}
-	$('#member_list ul li').bind('click',function(){
-		$('#mainPage').hide();
-		$('#detailsPage').show();
-		var selected_memberId = $(this).attr('id');
-		var index = getIndex(selected_memberId,parsedData);
-		if(index == "Error in fetching details"){
-			alert("Error in fetching details");
-		}
-		else{
-			populateMemExpenseDetail(parsedData,index);
-		}
-	});
-}
-
-function getIndex(selected_memberId,parsedData)
-{
-	memObj = parsedData.metadata[0].member;
-	var len = memObj.length;
-	var i;
-	var retText = "Error in fetching details";
-	for(i=0;i<=len-1;i++)
-	{
-		if(selected_memberId == memObj[i].name){
-			return i;
-		}
-	}
-	return retText;
-}
-
-function populateMemExpenseDetail(parsedData,index){
-	memObj = parsedData.metadata[0].member;
-	var expObj = memObj[index].entry;
-	var len = expObj.length;
-	var items = [];
-	var i;
-	$('#expense_list').html("");
-	var serialNum =0; 
-	if(len != 0)
-	{
-		for(i =0;i<=len-1;i++)
-			{
-				$('#expense_list').html("");
-				//alert("asd"+i+" "+memObj[i].id+" "+memObj[i].name+" "+memObj[i].amount);
-				serialNum = i+1;
-				var toPush = '<li class="list" id="'+expObj[i].id+'"><span class="serialNo">'+serialNum+'.</span><span class="memName">'+expObj[i].purpose+'</span><span class="amt"><img alt="Rs" src="img/rupee.png" width="7" height="10" style="vertical-align: baseline" data-file-width="512" data-file-height="754">'+expObj[i].amount+'</span></li>';
-				items.push(toPush);
-				$('<ul/>', {
-				    html: items.join('')
-				  }).appendTo('#expense_list');
-			}
-	}
-	else
-	{
-      alert("No expenses available currently.");
-	}
-	$('#expense_list ul li').bind('click',function(){
-		$("#showDetailPopUp").popup("open");
-		var id = $(this).attr('id');
-		//parsedData.metadata[0].member;
-		
-	});
+    function writeFile(msg)
+    {
+    	 window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
+    	writeText = msg;
+    }
 	
+	function playAudio()
+  {
+    myMedia.play();
+  }
+
+  function stopAudio()
+  {
+    myMedia.stop();
+  }
+  
+function getStatus() {
+	myService.getStatus(function(r){displayResult(r);}, function(e){displayError(e);});
+	}
+
+function displayResult(data) {
+	alert("Is service running: " + data.ServiceRunning);
+	}
+
+function displayError(data) {
+	alert("We have an error");
+}
+function updateHandler(data)
+{
+	if (data.LatestResult != null)
+	{
+		try
+		{			
+			//alert("latitude "+data.LatestResult.latitude);
+			//alert("longitude "+data.LatestResult.longitude);
+		}
+		catch (err){}
+   	}
+	
+	var dateObj = new Date();
+	console.log("neha   "+dateObj);
+	checkConnection();
+	trackCurrentLocation();
+	setTimeout(function(){
+		calculateDistance();
+		$('#currentStatus').text("Approximately 2.5 hours ("+globalDistance+" KM) away from the destination.");
+	}, 500);
+	//calculateDistance();
+	$('#updateStatus').text(dateObj);
 	
 }
 
-function checkPreviousName(memName){
-	memObj = parsedData.metadata[0].member;
-	var i;
-	var len = memObj.length;
-	var text1 = "alreadExists";
-	var flag = 0;
-	for(i=0;i<=len-1;i++)
+function go()
+{
+	if(myService != undefined)
+		myService.getStatus(function(r){startService(r);}, function(e){displayError(e);});
+};
+
+function startService(data) {
+	if (data.ServiceRunning) {
+	      enableTimer(data);
+	   }
+	else
 	{
-		if(memName == memObj[i].name){
-			return false;
-		}
-		else{
-			
-		}
+		myService.startService(function(r){enableTimer(r);}, function(e){displayError(e);});
 	}
-	return true;
+}
+	
+function enableTimer(data) {
+	if (data.TimerEnabled) {
+	      registerForUpdates(data);
+	   } 
+	else {
+	      myService.enableTimer(20000, function(r){registerForUpdates(r);}, function(e){displayError(e);});
+	   }
 }
 
-//Store
-/*	localStorage.setItem("language", "en");
-	// Retrieve
-	document.getElementById("result").innerHTML = localStorage.getItem("lastname");
-	location.reload();*/
+function registerForUpdates(data) {
+	if (!data.RegisteredForUpdates)
+	{
+		myService.registerForUpdates(function(r){updateHandler(r);}, function(e){handleError(e);});
+	}
+}
+
+function handleSuccess(data){
+	//alert("Service has de register For Updates");
+}
+
+function handleError(data) {
+	//alert("We have an error in stopping service");
+}
+
+function startBgService()
+{
+	go();
+}
+function stopBgService()
+{
+	if(myService != null)
+		myService.stopService(function(r){handleSuccess(r);}, function(e){handleError(e);});
+}
+
+function checkConnection() {
+    var networkState = navigator.connection.type;
+
+    var states = {};
+    states[Connection.UNKNOWN]  = 'Currently using Unknown connection';
+    states[Connection.ETHERNET] = 'Currently using Ethernet connection';
+    states[Connection.WIFI]     = 'Currently using WiFi connection';
+    states[Connection.CELL_2G]  = 'Currently using Cell 2G connection';
+    states[Connection.CELL_3G]  = 'Currently using Cell 3G connection';
+    states[Connection.CELL_4G]  = 'Currently using Cell 4G connection';
+    states[Connection.CELL]     = 'Currently using Cell generic connection';
+    states[Connection.NONE]     = 'No network connection from past 7 minutes';
+
+    $('#networkStatus').text(states[networkState]);
+     //   alert('Connection type: ' + states[networkState]);
+}
+

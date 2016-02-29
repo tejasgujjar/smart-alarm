@@ -1,0 +1,51 @@
+<ion-modal-view>
+  <ion-header-bar>
+   
+    <h1 class="title">Map</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeMap()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+  	<!-- <div ng-controller="mapPageCtrl"> -->
+    <div ng-controller="mapCtrl">
+    	<div style="width:100%;height:100px;" id="map-canvas" data-tap-disabled="true"></div>
+     	<label class="item item-input">
+  			<span class="input-label ">Radius</span>
+  			<span style="width:20%"><input ng-keyup="radiusKeyup()" id="radius_map_new" type="number" value="10"> </span>
+  			<span >KM</span>
+			</label>
+	    <div style="border-color:transparent" class="item range range-positive">
+	    		<i class="icon ion-ios-minus-outline"></i>
+	    		<input ng-model="levelvalue" data-tap-disabled="true" ng-change="setLevelText()" id="radiusRange" type="range" name="volume" min="1" max="10" value="2">
+	    		<i class="icon ion-ios-plus-outline"></i>
+  		</div>
+	       <button ng-click="saveMapData()" class="button button-small button-block ion-checkmark button-positive">Submit</button>
+
+    <!-- <div class="bar bar-header bar-dark">
+      <h1 class="title">Map</h1>
+    </div>
+    <ion-content has-header="true" has-footer="true" scroll="false">
+      <div ng-model="map" style="width:100%;height:100%; "id="map" data-tap-disabled="true"></div>
+    </ion-content>
+    <div class="bar bar-footer bar-dark">
+      <a ng-click="centerOnMe()" class="button button-icon icon ion-navigate">Find Me</a>
+    </div> -->
+  	</div>
+<!--     <form ng-submit="getMapDetails()">
+      <div class="list">
+        <label class="item item-input">
+          <span class="input-label">Username</span>
+          <input type="text" ng-model="loginData.username">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Password</span>
+          <input type="password" ng-model="loginData.password">
+        </label>
+        <label class="item">
+          <button class="button button-block button-positive" type="submit">Log in</button>
+        </label>
+      </div>
+    </form> -->
+  </ion-content>
+</ion-modal-view>

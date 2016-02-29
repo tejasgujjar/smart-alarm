@@ -1,0 +1,49 @@
+<ion-view view-title="Home" class="p">
+  <ion-content ng-controller="homeCtrl">
+   
+   	<ul class="list">
+	 <!--  <li class="item item-toggle">
+    	 Set Location of Destination  
+     	<label class="toggle toggle-positive">
+	        <input type="checkbox" ng-model="togleAlarm">
+	        <div class="track">
+	          <div class="handle"></div>
+	       	</div>
+    	</label>	
+ 	  </li> -->
+ 	  <ion-toggle style="color:#996300;" ng-model="pushNotification.checked"
+                    ng-change="pushNotificationChange()" ng-checked="pushNotification.checked">
+          <b>Set Location of Destination  </b>
+        </ion-toggle>
+ 	  <label class="item item-input">
+		  <span style="color:#996300;" class="input-label "><b>Address</b></span>
+		  <input id="inputAddressBar" class="inputBG" ng-click="initialize()" type="text" value="" placeholder="Enter location">
+	  </label>
+
+	<button ng-click="showMap()" class="button button-small button-block ion-android-pin button-positive"> View Map</button>
+	<!-- <a href="#/mapPage">Map page</a> -->
+	  <label class="item item-input">
+		  <span style="color:#996300;" class="input-label "><b>Radius</b></span>
+		   <span id="geofence_radius">1</span> <span>&nbsp; KM</span>
+	  </label>
+	  <label class="item item-input">
+		  <span style="color:#996300;" class="input-label "><b>Status</b></span>
+		  <span id="currentStatus">Deactivated <br> <p id="bgStatus">Background status</p> </span>
+	  </label>
+	  <label class="item item-input">
+		  <span style="color:#996300;" class="input-label "><b>Network</b></span>
+		   <span id="networkStatus">updating...</span>
+	  </label>
+	  <label class="item item-input">
+		  <span style="color:#996300;" class="input-label "><b>Details</b></span>
+		 <span >Last Update (mm-dd-yyyy):<br> <p id="updatedTime"> No update available.</p></span>
+	  </label>
+	   <label class="item item-input">
+		  <span style="color:#996300;" class="input-label "><b>Remaining Distance</b></span>
+		 <span id="remainingDistance">-</span><span>&nbsp;KM</span>
+	  </label>
+<!-- class="item item-text-wrap" -->
+
+</ul>
+  </ion-content>
+</ion-view>
