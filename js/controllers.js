@@ -20,8 +20,6 @@ myApp.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
     console.log("test+modal");
   });
 
- 
-
   // Triggered in the login modal to close it
   $scope.closeLogin = function() {
     $scope.modal.hide();
@@ -51,17 +49,17 @@ myApp.controller('savedDestinationsCtrl', function($scope) {
     { title: 'Saved Destination 2', id: 5 },
     { title: 'Saved Destination 3', id: 6 }
   ];
-  //alert("gett");
+  
 })
 
 myApp.controller('savedDestinationCtrl', function($scope, $stateParams) {
-//alert("tst");
+
 });
 
 myApp.controller('exitCtrl', function($scope, $stateParams) {
 
    $scope.exitApp = function() {
-      //alert("Exiting");
+   //alert("Exiting");
    navigator.app.exitApp(); 
   };
 });
@@ -82,21 +80,7 @@ console.log("tstHOme");
   $scope.pushNotificationChange = function() {
     console.log("Toggle:  "+$scope.pushNotification.checked);
     toggleChange($scope.pushNotification.checked);
-  //  if($scope.pushNotification.checked)
-  //  {
-  //   alert("true");
-  //   setTimeout(function(){
-  // $scope.pushNotification = true;
-  //   },1000);
   
-  //  }
-  //  else
-  //  {
-  //     alert("false");
-  //       setTimeout(function(){
-  // $scope.pushNotification = true;
-  //   },1000);
-  //  }
   };
  
  $scope.showMap = function() {
@@ -111,26 +95,10 @@ console.log("tstHOme");
   };
 });
 
-/*myApp.controller('mapPageCtrl',function($scope, $stateParams){
-  console.log("mapp page");
-    $scope.radiusKeyup = function(){
-      console.log("Entered radius_map_new");
-      enteredRadiusVal();
-    }
-$scope.sliderChange = function(){
-  console.log("Entered slider");
- // enteredRadiusVal();
-  }
-});
-*/
-//-------------------
-
-
 myApp.controller('mapCtrl',function($scope, $stateParams,  $ionicPopup){
   console.log("loaded map ctrl");
 
- $scope.radiusKeyup = function() {
-  //alert("testsdsdtt");
+$scope.radiusKeyup = function() {
   enteredRadiusVal();
 }
 $scope.setLevelText = function(rangeValue) {
@@ -140,28 +108,17 @@ $scope.setLevelText = function(rangeValue) {
   }
 
 $scope.saveMapData = function() {
-  //alert("testsdsdtt");
- saveMapRelatedData();
-    $scope.modal.hide();
+   saveMapRelatedData();
+   $scope.modal.hide();
 }
 
 });
 
-
-
-
-
-
-
-
-
-
-//-------------------
    myApp.controller('mapPageCtrl', function($scope, $ionicLoading) {
       function initialize() {
         var homeLat =13.0502745;
-var homeLng =77.6232895;
-var homeLocation = new google.maps.LatLng(homeLat, homeLng);
+        var homeLng =77.6232895;
+        var homeLocation = new google.maps.LatLng(homeLat, homeLng);
          console.log("initializeINGGGG");
         var mapOptions = {  
           center: new google.maps.LatLng(43.07493,-89.381388),
@@ -188,12 +145,7 @@ var homeLocation = new google.maps.LatLng(homeLat, homeLng);
           console.log("error in map");
           return;
         }
-
-        // $scope.loading = $ionicLoading.show({
-        //   content: 'Getting current location...',
-        //   showBackdrop: false
-        // });
-console.log("Getting msg");
+   console.log("Getting msg");
    $scope.map.setCenter(homeLocation);
      
       };

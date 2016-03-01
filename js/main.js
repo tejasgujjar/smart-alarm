@@ -3,11 +3,6 @@ $(document).ready(function()
 	alert("testttttttt");
 	allevents();
 	document.addEventListener("deviceready", onDeviceReady, true);
-	// document.addEventListener('deviceready', function() {
-			// alert("device ready	");
-				// myService = cordova.plugins.myService;
-				// getStatus();
-  			// }, true);
 	loadMap(1);
 });
 var isDeviceReady = false;
@@ -16,7 +11,7 @@ var writeText;
 var txtAlert;
 function allevents()
 {
-	 // Retrieve
+	// Retrieve
     var check = $('#updateStatus').text();//initial text in html is blank 
     if(check == "")
     {
@@ -79,14 +74,7 @@ function allevents()
 	    $('#offAlarm').bind('click',function(){
 	    	offAlarm();
 	    });
-	 /*   $('#create').unbind();
-	    $('#create').bind('click',function(){
-	    	if(isDeviceReady)
-	    		{
-	    		//writeFile("Hello Again");
-	    		}else{alert("Device not ready");}
-	    });*/
-	
+		
 	$(document).on('slidestop', '#createGeofence_select', function(){
 		var togg = document.getElementById("createGeofence_select").value;
 		if(togg=="on")
@@ -115,24 +103,14 @@ function allevents()
 		else if(togg == "off")
 		{
 			offAlarm();
-			/*document.getElementById("viewmap_button").disabled = false;
-			document.getElementById("offAlarm").disabled = true;
-			//off function
-			stopAudio();
-			  localStorage.setItem("bgServiceStatus", "notrunning");
-			$('#updateStatus').text("No details available. Please activate alarm.");
-    		$('#currentStatus').text("Alarm deactivated.");
-    		stopBgService();*/
-		}
+			}
 	});
 }
 
 function onDeviceReady() {
 	alert("not ready");
 	isDeviceReady = true;
-	//writeFile("Hello");
-     myMedia = new Media('sound.mp3', stopAudio);
-	 //alert("device ready. Welcome");
+	myMedia = new Media('sound.mp3', stopAudio);
 	myService = cordova.plugins.myService;
 	checkConnection();
 	trackCurrentLocation();
@@ -212,7 +190,6 @@ function updateHandler(data)
 		calculateDistance();
 		$('#currentStatus').text("Approximately 2.5 hours ("+globalDistance+" KM) away from the destination.");
 	}, 500);
-	//calculateDistance();
 	$('#updateStatus').text(dateObj);
 	
 }
@@ -281,6 +258,6 @@ function checkConnection() {
     states[Connection.NONE]     = 'No network connection from past 7 minutes';
 
     $('#networkStatus').text(states[networkState]);
-     //   alert('Connection type: ' + states[networkState]);
+    
 }
 

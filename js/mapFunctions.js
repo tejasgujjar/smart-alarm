@@ -47,8 +47,8 @@ function preReqsForMap()
     	 // Enable background mode
     	cordova.plugins.backgroundMode.enable();
 
-    // Called when background mode has been activated
-      cordova.plugins.backgroundMode.onactivate = function () {
+        // Called when background mode has been activated
+        cordova.plugins.backgroundMode.onactivate = function () {
 	      	if(toggleSwitch)
 	      	{
 	      		//  alert("running in bg");
@@ -72,14 +72,9 @@ function preReqsForMap()
 
 
 function onBackKeyDown() {
-//     alert("pressed back buton");
-//     	navigator.Backbutton.goHome(function() {
-//  		alert("successs");
-// }, function() {
-//  alert("failure");
-// });
-
+//     console.log("pressed back buton");
 }
+
 function getCurrentLocation()
 {
 	  if (navigator.geolocation)
@@ -90,55 +85,47 @@ function getCurrentLocation()
 		  alert("Geolocation is not supported by this browser.");
 	  }
 
-function showPosition(position)
-{
-	console.log("lat and lng: "+position.coords.latitude+" "+position.coords.longitude);
-	CurrentLat = position.coords.latitude;
-	CurrentLng = position.coords.longitude;
-	globalCurrentLat = CurrentLat;
-	globalCurrentLng = CurrentLng;
-	//globalMarkerLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-	 // return globalMarkerLocation;
-	//alert("initial loc:: "+initialLocation);
-	  }
+	function showPosition(position)
+	{
+		console.log("lat and lng: "+position.coords.latitude+" "+position.coords.longitude);
+		CurrentLat = position.coords.latitude;
+		CurrentLng = position.coords.longitude;
+		globalCurrentLat = CurrentLat;
+		globalCurrentLng = CurrentLng;
+	}
 	function showError(error)
-	  {
-alert("Error in fetching current location");
-	  switch(error.code)
-	    {
-	    case error.PERMISSION_DENIED:
-	    alert("User denied the request for Geolocation.");
-	    break;
-	    case error.POSITION_UNAVAILABLE:
-	    alert("Location information is unavailable.");
-	    break;
-	    case error.TIMEOUT:
-	    alert("The request to get user location timed out.");
-	    break;
-	    case error.UNKNOWN_ERROR:
-	    alert("An unknown error occurred.");
-	    break;
-	    }
+	{
+		alert("Error in fetching current location");
+		switch(error.code)
+		{
+		    case error.PERMISSION_DENIED:
+		    alert("User denied the request for Geolocation.");
+		    break;
+		    case error.POSITION_UNAVAILABLE:
+		    alert("Location information is unavailable.");
+		    break;
+		    case error.TIMEOUT:
+		    alert("The request to get user location timed out.");
+		    break;
+		    case error.UNKNOWN_ERROR:
+		    alert("An unknown error occurred.");
+		    break;
+		}
 		CurrentLat = homeLat;
 		CurrentLng = homeLng;
-	//  globalMarkerLocation = new google.maps.LatLng(homeLat, homeLng);
-	//  return globalMarkerLocation;
-	//alert("initial loc defined:: "+initialLocation);
-	  }	
+	}	
 }
 
 
 function loadMap(radVal){
- 
-navigator.vibrate(40);
-var test = $( window ).height();
- test = test -210;
- $("#map-canvas").css("height",test);
- 	$('#radius_map_new').val(radVal);
- 	 $('#radiusRange').val(globalRadius);
-
+ 	navigator.vibrate(40);
+	var test = $( window ).height();
+	test = test -210;
+    $("#map-canvas").css("height",test);
+	$('#radius_map_new').val(radVal);
+	$('#radiusRange').val(globalRadius);
 	console.log("loading map");
-	console.log("jump , geofenceMap ="+geofenceMap);
+	
 	if(geofenceMap == null)
 	{
 		var mapDiv = document.getElementById('map-canvas');
@@ -153,11 +140,6 @@ var test = $( window ).height();
 			rotateControl:false,
 			mapTypeId: 'roadmap'
 		});
-	  // geofenceMap.addListener(geofenceMap, "idle", function()
-	  //  {
-		 // google.maps.event.trigger(geofenceMap, 'resize');
-		 // geofenceMap.setZoom(geofenceMap.getZoom());
-	  //  });
 	}
 	getCurrentLocation();
 	var Location = new google.maps.LatLng(CurrentLat, CurrentLng);
@@ -190,21 +172,12 @@ var test = $( window ).height();
 				console.log("call refresh map & clickedonMap else");
 			}
 	}
-	// 	google.maps.event.addListener(geofenceMap, 'click', function(event) { document.getElementById('map-canvas')
-		//  marker.addListener('click', function() {
-  //   map.setZoom(8);
-  //   map.setCenter(marker.getPosition());
-  // });
-	// 	console.log("addL clicked");
-	// });
+	
 	google.maps.event.addListener(geofenceMap, 'click', function(event) {
-		/*distanceWidget = new DistanceWidget(simulateScreenMap,event.latLng);
-		displayAddress(distanceWidget);*/
 		console.log("clicked first function "+event.latLng);
 		navigator.vibrate(25);
-	//	alert("clicked first function "+event.latLng);
-		 clickedonMap(event.latLng);
-		 refreshMap(event.latLng,globalRadius);
+		clickedonMap(event.latLng);
+		refreshMap(event.latLng,globalRadius);
 		console.log("call refresh map & clickedonMap clicked");
 	});
 }
@@ -234,48 +207,32 @@ function enteredRadiusVal()
 {
 	var checkRad = document.getElementById('radius_map_new').value;
 	var numbers = /^[0-9]+$/;  
-	//console.log("radius"+checkRad);
-	// if(checkRad > 100 || (checkRad.match(numbers) ==  false))
-	// if(checkRad > 100 )
-	// 	{ 
-	// 	//error or invalid
-	// 	document.getElementById('radius_map_new').blur();
-	// 	document.getElementById('radius_map_new').val="";
-	// 	 $('#radiusRange').val(0);
-	// 	//alert("Radius should be in between 1 and 10");
-	// 	}
-	// else
-		{
-			globalRadius = checkRad;
-			 $('#radius_map_new').val(checkRad);
-			refreshMap(globalMarkerLocation ,globalRadius);
-		}	
+	globalRadius = checkRad;
+	$('#radius_map_new').val(checkRad);
+	refreshMap(globalMarkerLocation ,globalRadius);
 }
 
 function initialize() {
 	  // Create the autocomplete object, restricting the search to geographical location types.         
 	  autocomplete = new google.maps.places.Autocomplete(
-	      /** @type {HTMLInputElement} */(document.getElementById('inputAddressBar')),
-	      { types: [] });
+      /** @type {HTMLInputElement} */(document.getElementById('inputAddressBar')),
+      { types: [] });
 	  // When the user selects an address from the dropdown,populate the address fields in the form.
-	//  alert("initializes");
 	  google.maps.event.addListener(autocomplete, 'place_changed', function() {
 		  isEnteredAddress = true;
 		  fillInAddress(autocomplete.getPlace());
-		 // alert("selected");
 	  });
-	}
+}
 
 function fillInAddress(temp_place) {
-  // Get the place details from the autocomplete object.
-	globalAddressObject = temp_place;
-  console.log("Selected Address from drop down menu is :"+temp_place.formatted_address);
-  // stops execution if address is not selected from the drop down menu
-  globalMarkerLocation = temp_place.geometry.location;
-  console.log("selected lat lng: "+globalMarkerLocation);
- // refreshMap(globalMarkerLocation,globalRadius);
-  geofenceMap = null;
- }
+	  // Get the place details from the autocomplete object.
+	  globalAddressObject = temp_place;
+	  console.log("Selected Address from drop down menu is :"+temp_place.formatted_address);
+	  // stops execution if address is not selected from the drop down menu
+	  globalMarkerLocation = temp_place.geometry.location;
+	  console.log("selected lat lng: "+globalMarkerLocation);
+	  geofenceMap = null;
+}
 
 function refreshMap(markerLocation,radVal)
 {
@@ -283,17 +240,13 @@ function refreshMap(markerLocation,radVal)
 	marker=new google.maps.Marker({
 		  position:markerLocation,
 		  markerId:randomNumber,
-		  //animation:google.maps.Animation.DROP
-		  });
+	});
 	marker.setMap(geofenceMap);
-	//geofenceMap.setCenter(markerLocation);
-	 google.maps.event.addDomListener(document.getElementById('map-canvas'), "idle", function()
-			    {
-				  google.maps.event.trigger(geofenceMap, 'resize');
-				  geofenceMap.setZoom(geofenceMap.getZoom());
-				//	geofenceMap.setCenter(markerLocation);
-			    });
-
+	google.maps.event.addDomListener(document.getElementById('map-canvas'), "idle", function()
+	{
+	    google.maps.event.trigger(geofenceMap, 'resize');
+	    geofenceMap.setZoom(geofenceMap.getZoom());
+	});
 	handleMarker();
 	handleMapEvents(markerLocation,radVal);
 }
@@ -332,7 +285,6 @@ function clickedonMap(clickedLocation,updateAddrss)
 				geofenceMap.setCenter(clickedLocation);
 				clickedAddress = results[0].formatted_address;
 				console.log("CLICKED ADDRESS :"+results[0].formatted_address);
-//				fillInAddress(results[1]);
 				if(updateAddrss)
 				{
 					$('#inputAddressBar').val('');
@@ -364,11 +316,8 @@ function saveMapRelatedData()
 	isSubmitted = true;
 	submittedRadius = globalRadius;
 	submittedLocation = globalMarkerLocation;
-	//var radius_Unit = 'Km';	
-	//$('#rad_unit').text(radius_Unit);
 	$('#geofence_radius').text(globalRadius);
 	$('#inputAddressBar').val(clickedAddress);
-
 }
 
 function restoreMapData()
@@ -416,10 +365,8 @@ function calculateDistance()
 		var distance = getDistanceFromLatLonInKm(globalCurrentLat,globalCurrentLng,markerLat,markerLng);
 		globalDistance = distance.toFixed(2);
 		var radius = $('#geofence_radius').text();
-		//alert("radius :"+radius+" distance :"+distance);
 		if(radius > distance)
 		{
-			//alert("ON ALARM");
 			onAlarm();		
 		}
 	}
@@ -501,7 +448,6 @@ function updateTime()
 	var d = new Date();
 	var e = formatDate(d);
 	$('#updatedTime').text(e);
-	//alert(e);
 }
 
 function formatDate(date) {
@@ -530,14 +476,14 @@ function toggleChange(value)
 		 bgIntervalId=	setInterval(backgroundFunctions,delayInterval);
 	}
 	else{
-	alert("Turning Off");   
-	$('#currentStatus').text("Deactivated");
-	  clearInterval(bgIntervalId);
-	   cordova.plugins.backgroundMode.setDefaults({ 
-        	title:  'Smart Alarm App',
-        	text:   'Sit Back & Relax! We are working for you.'
-    	});
-	 cordova.plugins.backgroundMode.disable();
+		alert("Turning Off");   
+		$('#currentStatus').text("Deactivated");
+		  clearInterval(bgIntervalId);
+		   cordova.plugins.backgroundMode.setDefaults({ 
+	        	title:  'Smart Alarm App',
+	        	text:   'Sit Back & Relax! We are working for you.'
+	    	});
+	    cordova.plugins.backgroundMode.disable();
 	}
 }
  
@@ -555,5 +501,4 @@ function checkConnection() {
     states[Connection.NONE]     = 'No network connection';
 
     $('#networkStatus').text(states[networkState]);
-     //   alert('Connection type: ' + states[networkState]);
 }
